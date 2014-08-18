@@ -1,0 +1,8 @@
+.DS_Store
+.coverage
+.idea/
+build/
+dist/
+*.pyc
+*.pyo
+*.egg-info
