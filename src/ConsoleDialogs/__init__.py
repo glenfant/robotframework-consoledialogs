@@ -6,45 +6,39 @@ ConsoleDialogs
 
 A pure console replacement for the Robot Framework Dialogs library.
 """
+from __future__ import print_function, unicode_literals, division, absolute_import
 
-import sys
-import logging
 import pkg_resources
 
-# Custom logger
-LOG = logging.getLogger(name=__name__)
-if sys.version_info < (2, 7):
-    class NullHandler(logging.Handler):
-        """Copied from Python 2.7 to avoid getting `No handlers could be found
-        for logger "xxx"` http://bugs.python.org/issue16539
-        """
-        def handle(self, record):
-            pass
-        def emit(self, record):
-            pass
-        def createLock(self):
-            self.lock = None
-else:
-    from logging import NullHandler
+from robot.api import logger
 
-LOG.addHandler(NullHandler())
+from .keywords import ConsoleKeywords
 
 # PEP 396 style version marker
 try:
     __version__ = pkg_resources.get_distribution(u'robotframework-consoledialogs').version
 except:
-    LOG.warning("Could not get the package version from pkg_resources")
+    logger.warn("Could not get the package version from pkg_resources")
     __version__ = 'unknown'
 
-# FIXME: This is just for checking doctests setup. You may remove this function.
-# See tests/test_doctests.py from this distro root
-def identity(obj):
-    """Returns the ``obj`` parameter itself
 
-        >>> identity(5)
-        5
-        >>> foo = 2
-        >>> identity(foo) is foo
-        True
+class ConsoleDialogs(ConsoleKeywords):
+    """A test library providing dialogs for interacting with users.
+
+    `ConsoleDialogs` is a replacement for the `Dialogs` Robot Framework's
+    standard library that provides means for pausing the test execution and
+    getting input from users. The dialogs are slightly different depending on
+    are tests run on Python or Jython but they provide the same functionality.
+
+    Long lines in the provided messages are wrapped automatically since
+    Robot Framework 2.8. If you want to wrap lines manually, you can add
+    newlines using the `\\n` character sequence.
+
+    The library has following two limitations:
+    - It is not compatible with IronPython.
+    - It cannot be used with timeouts on Python.
     """
-    return obj
+    ROBOT_LIBRARY_SCOPE = 'GLOBAL'
+    ROBOT_LIBRARY_DOC_FORMAT = 'ROBOT'
+    ROBOT_LIBRARY_VERSION = __version__
+

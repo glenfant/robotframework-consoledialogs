@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""\
+"""
 ==============
 ConsoleDialogs
 ==============
@@ -13,6 +13,7 @@ else:
     import unittest
 
 from .resources import tests_directory
+
 
 def all_tests():
     return unittest.defaultTestLoader.discover(tests_directory)
