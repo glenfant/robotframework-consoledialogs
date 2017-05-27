@@ -24,7 +24,8 @@ try:
 except ImportError:
     USE_CURSES = False
 
-USE_CURSES = 'RF_INLINE_DIALOGS' not in os.environ
+# Temporarily forced during dev
+USE_CURSES = False
 
 if USE_CURSES:
     from .cursesdialogs import MessageDialog, PassFailDialog
