@@ -16,7 +16,7 @@ from .keywords import ConsoleKeywords
 
 # PEP 396 style version marker
 try:
-    __version__ = pkg_resources.get_distribution(u'robotframework-consoledialogs').version
+    __version__ = pkg_resources.get_distribution('robotframework-consoledialogs').version
 except:
     logger.warn("Could not get the package version from pkg_resources")
     __version__ = 'unknown'

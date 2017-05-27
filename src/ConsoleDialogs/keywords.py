@@ -9,8 +9,14 @@ Provide the keywords
 from __future__ import print_function, unicode_literals, division, absolute_import
 
 import os
+import sys
 
-import robot.libraries.Dialogs as orig_dialogs
+# We need to mock temporarily tkinter sice we can't get the legacy keywords docstrings
+# without importing tkinter
+from . import fake_tkinter
+sys.modules['tkinter'] = fake_tkinter
+import robot.libraries.Dialogs as LegacyDialogs
+del sys.modules['tkinter']
 
 try:
     import curses
@@ -78,12 +84,13 @@ class ConsoleKeywords(object):
         # Example:
         # | ${username} = | Get Selection From User | Select user name | user1 | user2 | admin |
         # """
-        pass
+        MessageDialog(message).show()
+
 
 # Fixing docstrings
 
 for keyword in ('pause_execution', 'execute_manual_step', 'get_value_from_user', 'get_selection_from_user'):
-    getattr(ConsoleKeywords, keyword).__func__.__doc__ = getattr(orig_dialogs, keyword).__doc__
+    getattr(ConsoleKeywords, keyword).__func__.__doc__ = getattr(LegacyDialogs, keyword).__doc__
 
 
 # ConsoleKeywords.pause_execution.__func__.__doc__ = orig_dialogs.pause_execution.__doc__

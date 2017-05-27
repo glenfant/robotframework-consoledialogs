@@ -31,7 +31,7 @@ def console_stdio_ctxt():
         sys.stdin, sys.stdout, sys.stderr = former_stdin, former_stdout, former_stderr
 
 
-def use_stdio_deco(func):
+def console_stdio_deco(func):
     """Use console for sys.stdin, sys.stdout, sys.stderr in a function / method
     """
     @functools.wraps(func)
@@ -39,6 +39,7 @@ def use_stdio_deco(func):
         with console_stdio_ctxt():
             return func(*args, **kwargs)
     return wrapper
+
 
 class ConsoleIO(object):
     """Context manager and decorator that forces temporarily stdin, stdout and stderr to the console"""
