@@ -14,7 +14,9 @@ Installation
 
 .. code:: console
 
-   pip install robotframework-consoledialogs
+   git clone <git-url> # Get the git URL at Github page of this project
+   cd robotframework-consoledialogs
+   python setup.py install
 
 Usage
 =====
