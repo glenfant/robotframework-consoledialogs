@@ -6,3 +6,5 @@ dist/
 *.pyc
 *.pyo
 *.egg-info
+samples/*.html
+samples/*.xml
