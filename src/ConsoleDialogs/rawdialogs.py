@@ -8,7 +8,6 @@ input/raw_input based dialogs
 """
 from __future__ import print_function, unicode_literals, division, absolute_import
 
-import contextlib
 import functools
 import sys
 import textwrap
@@ -17,28 +16,7 @@ if sys.version_info < (3, 3):
     from backports.shutil_get_terminal_size import get_terminal_size
 else:
     from shutil import get_terminal_size
-
-
-@contextlib.contextmanager
-def console_stdio_ctxt():
-    """Use console for sys.stdin, sys.stdout, sys.stderr in a with;... block
-    """
-    former_stdin, former_stdout, former_stderr = sys.stdin, sys.stdout, sys.stderr
-    sys.stdin, sys.stdout, sys.stderr = sys.__stdin__, sys.__stdout__, sys.__stderr__
-    try:
-        yield
-    finally:
-        sys.stdin, sys.stdout, sys.stderr = former_stdin, former_stdout, former_stderr
-
-
-def console_stdio_deco(func):
-    """Use console for sys.stdin, sys.stdout, sys.stderr in a function / method
-    """
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        with console_stdio_ctxt():
-            return func(*args, **kwargs)
-    return wrapper
+    raw_input = input
 
 
 class ConsoleIO(object):
@@ -46,12 +24,18 @@ class ConsoleIO(object):
     def __init__(self):
         self.mem_stdin, self.mem_stdout, self.mem_stderr = sys.stdin, sys.stdout, sys.stderr
 
+    def __flush_out_streams(self):
+        sys.stdout.flush()
+        sys.stderr.flush()
+
     def __to_console(self):
         """Forces default IO to console"""
+        self.__flush_out_streams()
         sys.stdin, sys.stdout, sys.stderr = sys.__stdin__, sys.__stdout__, sys.__stderr__
 
     def __to_previous(self):
         """Back to previous situation"""
+        self.__flush_out_streams()
         sys.stdin, sys.stdout, sys.stderr = self.mem_stdin, self.mem_stdout, self.mem_stderr
 
     # Context manager
@@ -87,7 +71,7 @@ class MessageDialog(object):
     @ConsoleIO()
     def show(self):
         show_message(self.message)
-        raw_input("Hit [Return] to continue")
+        # raw_input("Hit [Return] to continue!")
 
 
 class PassFailDialog(object):

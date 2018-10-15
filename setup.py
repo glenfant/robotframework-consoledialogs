@@ -11,7 +11,7 @@ import os
 import sys
 from setuptools import setup, find_packages
 
-version = '1.0.0.dev0'
+version = '1.0.0'
 
 this_directory = os.path.abspath(os.path.dirname(__file__))
 
@@ -19,16 +19,12 @@ this_directory = os.path.abspath(os.path.dirname(__file__))
 def read(*names):
     return open(os.path.join(this_directory, *names), 'r').read().strip()
 
+
 long_description = '\n\n'.join(
     [read(*paths) for paths in (('README.rst',), ('CHANGES.rst',))]
-    )
-install_requires = ['setuptools', 'robotframework']
-if sys.version_info < (3, 3):
-    install_requires.append('backports.shutil_get_terminal_size')
+)
+install_requires = ['setuptools', 'robotframework', 'prompt_toolkit']
 dev_require = []
-if sys.version_info < (2, 7):
-    dev_require += ['unittest2']
-
 
 setup(name='robotframework-consoledialogs',
       version=version,
@@ -39,18 +35,18 @@ setup(name='robotframework-consoledialogs',
           "License :: OSI Approved :: MIT License",
           "Programming Language :: Python",
           "Programming Language :: Python :: 2.7",
-          "Programming Language :: Python :: 3.3",
           "Programming Language :: Python :: 3.4",
           "Programming Language :: Python :: 3.5",
           "Programming Language :: Python :: 3.6",
+          "Programming Language :: Python :: 3.7",
           "Environment :: Console :: Curses",
           "Operating System :: OS Independent"
-          ],
+      ],
       keywords='robotframework dialogs ui',
       author='Gilles Lenfant',
       author_email='gilles.lenfant@gmail.com',
-      url='http://pypi.python.org/pypi/robotframework-consoledialogs',
-      license='GPLv3',
+      url='http://pypi.org/pypi/robotframework-consoledialogs',
+      license='MIT',
       packages=find_packages('src'),
       package_dir={'': 'src'},
       include_package_data=True,
