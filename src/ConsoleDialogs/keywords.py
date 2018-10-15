@@ -14,34 +14,23 @@ import sys
 # We need to mock temporarily tkinter sice we can't get the legacy keywords docstrings
 # without importing tkinter
 from . import fake_tkinter
-sys.modules['tkinter'] = fake_tkinter
+
+sys.modules["tkinter"] = fake_tkinter
 import robot.libraries.Dialogs as LegacyDialogs
-del sys.modules['tkinter']
 
-try:
-    import curses
-    USE_CURSES = True
-except ImportError:
-    USE_CURSES = False
-
-# Temporarily forced during dev
-USE_CURSES = False
-
-if USE_CURSES:
-    from .cursesdialogs import MessageDialog, PassFailDialog
-else:
-    from .rawdialogs import MessageDialog, PassFailDialog
+del sys.modules["tkinter"]
+from prompt_toolkit.shortcuts import message_dialog, button_dialog
 
 
 class ConsoleKeywords(object):
-    def pause_execution(self, message='Test execution paused.'):
+    def pause_execution(self, message="Test execution paused."):
         # """Pauses test execution until user hits `Return` key.
         #
-        # `message` is the message shown in the dialog.
+        # `message` is the message s,hown in the dialog.
         # """
-        MessageDialog(message).show()
+        message_dialog(title="Execution paused", text=message)
 
-    def execute_manual_step(self, message, default_error=''):
+    def execute_manual_step(self, message, default_error=""):
         # """Pauses test execution until user sets the keyword status.
         #
         # User can press either `PASS` or `FAIL` button. In the latter case execution
@@ -51,12 +40,16 @@ class ConsoleKeywords(object):
         # `default_error` is the default value shown in the possible error message
         # dialog.
         # """
-        if not PassFailDialog(message).show():
-            msg = self.get_value_from_user('Give error message:', default_error)
-            raise AssertionError(msg)
+        result = button_dialog(
+            title="Did the test succeed?",
+            text=message,
+            buttons=[("Pass", "PASS"), ("Fail", "FAIL")],
+        )
+        if result == 'FAIL':
+            # zzz
+            pass
 
-
-    def get_value_from_user(self, message, default_value='', hidden=False):
+    def get_value_from_user(self, message, default_value="", hidden=False):
         # """Pauses test execution and asks user to input a value.
         #
         # Value typed by the user, or the possible default value, is returned.
@@ -90,7 +83,12 @@ class ConsoleKeywords(object):
 
 # Fixing docstrings
 
-for keyword in ('pause_execution', 'execute_manual_step', 'get_value_from_user', 'get_selection_from_user'):
+for keyword in (
+    "pause_execution",
+    "execute_manual_step",
+    "get_value_from_user",
+    "get_selection_from_user",
+):
     getattr(ConsoleKeywords, keyword).__func__.__doc__ = getattr(LegacyDialogs, keyword).__doc__
 
 
